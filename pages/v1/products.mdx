@@ -1,0 +1,138 @@
+# Список продукции
+
+Метод предназначен для получения информации о всех доступных к заказу товаров, их остатках на складах и сроках поставки.
+Остатки выводятся для складов разрешенных к просмотру в рамках договора с вашей компанией.
+В результатах запроса выводятся только товары, которые есть на остатках разрешенных к просмотру складов.
+
+
+## Запрос на получение списка продукции
+Для использования необходимо отправить <b>GET-запрос</b> на URL:
+
+| Среда | URL |
+|---|---|
+| тестовая | https://dev.lubricomarket.ru/api/v1/products | 
+| боевая | https://lubricomarket.ru/api/v1/products |
+
+
+## Параметры запроса
+Поддерживаются следующие параметры:
+
+| № | Название поля | Описание | Тип поля | Обяз. заполн. |
+|---|---|---|---|---|
+| 1 | limit | Лимит, количество записей за запрос, по-умолчанию 20 | int | нет |
+| 2 | offset | Смещение от начальной позиции, например: ?limit=20&offset=40 позволит получить записи с 41 по 60 | int | нет |
+| 3 | search | Поиск по полям title, itemKey, brand, article | string(255) | нет |
+
+
+## Ответ на запрос получения списка продукции
+Ответ возвращается в формате JSON:
+
+| № | Название поля | Описание | Тип поля |
+|---|---|---|---|
+| 1 | results | Массив результатов | array |
+| 1.1 | itemKey | Идентификатор товара, его необходимо будет передать в параметрах запроса на создание заказа, в массиве заказываемых товаров (возможен поиск по этому полю) | string(36) |
+| 1.2 | title | Название товара (возможен поиск по этому полю) | string(255) |
+| 1.3 | brand | Бренд товара (возможен поиск по этому полю) | string(100) |
+| 1.4 | article | Артикул товара (возможен поиск по этому полю) | string(50) |
+| 1.5 | volume | Объем, л | float |
+| 1.6 | price | Персональная цена товара, согласно договору с вашей компанией | float |
+| 1.7 | availability | Массив с остатками товаров по складам | array |
+| 1.7.1 | storehouseCity | Название города где расположен склад отгрузки | string(100) |
+| 1.7.2 | storehouseKey | Идентификатор склада отгрузки. Его необходимо будет передать в параметрах запроса на создание заказа, в массиве заказываемых товаров | string(36) |
+| 1.7.3 | storehouseAddress | Адрес склада отгрузки | string(255) |
+| 1.7.4 | storehouseMain | Является ли этот склад отгрузки основным для договора | boolean |
+| 1.7.5 | quantity | Доступное к заказу количество товара на складе | int |
+| 1.7.6 | deliveryTimeDays | Примерное время доставки, дней  | string(255) |
+| 1.7.7 | deliveryPeriod | Минимальное время доставки, часов  | int |
+| 1.7.8 | deliveryPeriodMax | Максимальное время доставки, часов | int |
+| 2 | total | Количество найденных по запросу товаров | int |
+| 3 | success | Возвращается со значением false только в случае ошибки и с полем message описывающим ошибку | boolean |
+| 4 | message | Описание ошибки | string(255) |
+
+## Примеры запросов
+
+```
+https://dev.lubricomarket.ru/api/v1/products?limit=1
+```
+
+
+```json
+{
+    "results": [
+        {
+            "itemKey": "75af26d4-a681-11e6-836f-001999b471da",
+            "title": "Смазка Total MULTIS MS 2 (e18kg)",
+            "brand": "TotalEnergies",
+            "article": "140076",
+            "volume": "18.00",
+            "price": "14577.09",
+            "availability": [
+                {
+                    "storehouseCity": "Ростов-на-Дону",
+                    "storehouseKey": "0a2eaa8c-ed6d-11e7-a211-38d54701fd10",
+                    "storehouseAddress": "344065, Ростовская обл, Ростов-на-Дону г, Троллейбусная ул, дом № 4",
+                    "storehouseMain": false,
+                    "quantity": 5,
+                    "deliveryTimeDays": "7-10 дн",
+                    "deliveryPeriod": 168,
+                    "deliveryPeriodMax": 240
+                },
+                {
+                    "storehouseCity": "Астрахань",
+                    "storehouseKey": "dfdbdc22-eca3-11e8-a205-b06ebf3af234",
+                    "storehouseAddress": "414004, Астраханская обл, Астрахань г, Зеленгинская 3-я ул, дом № 56б",
+                    "storehouseMain": true,
+                    "quantity": 0,
+                    "deliveryTimeDays": "На складе",
+                    "deliveryPeriod": 0,
+                    "deliveryPeriodMax": 0
+                }
+            ]
+        }
+    ],
+    "total": 628
+}
+```
+
+```
+https://dev.lubricomarket.ru/api/v1/products?limit=1&search=Rinnol
+```
+
+```json
+{
+    {
+    "results": [
+        {
+            "itemKey": "4cda6c25-3356-11ed-bc15-d64344f18cb6",
+            "title": "Масло моторное синт. RINNOL QUANT M  0W-30 DPF (e1L)",
+            "brand": "RINNOL",
+            "article": "193244",
+            "volume": "1.00",
+            "price": "730.32",
+            "availability": [
+                {
+                    "storehouseCity": "Ростов-на-Дону",
+                    "storehouseKey": "0a2eaa8c-ed6d-11e7-a211-38d54701fd10",
+                    "storehouseAddress": "344065, Ростовская обл, Ростов-на-Дону г, Троллейбусная ул, дом № 4",
+                    "storehouseMain": false,
+                    "quantity": 38,
+                    "deliveryTimeDays": "7-10 дн",
+                    "deliveryPeriod": 168,
+                    "deliveryPeriodMax": 240
+                },
+                {
+                    "storehouseCity": "Астрахань",
+                    "storehouseKey": "dfdbdc22-eca3-11e8-a205-b06ebf3af234",
+                    "storehouseAddress": "414004, Астраханская обл, Астрахань г, Зеленгинская 3-я ул, дом № 56б",
+                    "storehouseMain": true,
+                    "quantity": 4,
+                    "deliveryTimeDays": "На складе",
+                    "deliveryPeriod": 0,
+                    "deliveryPeriodMax": 0
+                }
+            ]
+        }
+    ],
+    "total": 64
+}
+```

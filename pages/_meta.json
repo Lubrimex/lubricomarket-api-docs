@@ -1,0 +1,10 @@
+{
+  "index": "Интеграция по API",
+  "v1": "Протокол обмена данными (v1.0)",
+  "lubricomarket": {
+    "title": "Личный кабинет «Лубрикомаркет» ↗",
+    "type": "page",
+    "href": "https://lubricomarket.ru/profile",
+    "newWindow": true
+  }
+}
