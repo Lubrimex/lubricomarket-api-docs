@@ -102,6 +102,13 @@ const config: DocsThemeConfig = {
       }
     }
   },
+  head: (
+    <>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta property="og:title" content="Лубрикомаркет для разработчиков" />
+      <meta property="og:description" content="Документация API" />
+    </>
+  ),
   footer: {
     text: (
       <span>
@@ -128,7 +135,15 @@ const config: DocsThemeConfig = {
   },
   search: {
     placeholder: "Поиск по документации",
-
+  },
+  themeSwitch: {
+    useOptions() {
+      return {
+        light: 'Светлый',
+        dark: 'Темный',
+        system: 'Системный',
+      }
+    }
   }
 }
 
